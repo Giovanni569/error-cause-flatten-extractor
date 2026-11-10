@@ -26,3 +26,10 @@ Error `cause` chains are useful but awkward to report: each layer has its own me
 ## Edge cases
 
 A cyclic `cause` chain is possible when code accidentally links errors back to an earlier one. This library records the repeated error as an entry with `cyclic: true` and does not descend into it again, so the output is finite. Non-Error causes (for example a string or number) are recorded as a single entry using `String(cause)` and have no stack.
+
+## Performance
+
+The window keeps a bounded buffer, so `push` is constant time and memory does not
+grow with the length of the stream. `peak` and `trough` are linear in the window
+size, which is the trade that keeps `push` cheap.
+
